@@ -22,7 +22,7 @@ class Matrix(object):
         string = ""
         for i in range(len(self.A)):
             for j in self.A[i]:
-                string += str(j)
+                string += str(j) + " "
             string += '\n'
         return string
 
@@ -95,11 +95,62 @@ class Matrix(object):
         return Matrix(arr1)
 
     def __mul__(self, other):
-        ...
+        if type(other) == int or type(other) == float:
+            return Matrix([[j * other for j in i] for i in self.A])
+        elif type(other) == Matrix:
+            if self.columns != other.rows:
+                raise Exception("Number of columns in matrix1 must be equal to number of rows in matrix2")
+            elif self.isSquare():
+                arr = [[0 for i in range(self.columns)] for j in range(self.rows)]
+                for i in range(self.rows):
+                    for j in range(self.columns):
+                        for k in range(self.columns):
+                            arr[i][j] += self.A[i][k] * other.A[k][j]
+                return Matrix(arr)
+            else:
+                arr = [[0 for i in range(other.columns)] for j in range(self.rows)]
+                for i in range(self.rows):
+                    for j in range(other.columns):
+                        arr[i][j] = 0
+                        for x in range(self.columns):
+                            arr[i][j] += (self.A[i][x] * other.A[x][j])
+                return Matrix(arr)
+
+    def __rmul__(self, other):
+        if type(other) == int or type(other) == float:
+            return Matrix([[j * other for j in i] for i in self.A])
+        elif type(other) == Matrix:
+            if self.columns != other.rows:
+                raise Exception("Number of columns in matrix1 must be equal to number of rows in matrix2")
+            elif self.isSquare():
+                arr = [[0 for i in range(self.columns)] for j in range(self.rows)]
+                for i in range(self.rows):
+                    for j in range(self.columns):
+                        for k in range(self.columns):
+                            arr[i][j] += self.A[i][k] * other.A[k][j]
+                return Matrix(arr)
+            else:
+                arr = [[0 for i in range(other.columns)] for j in range(self.rows)]
+                for i in range(self.rows):
+                    for j in range(other.columns):
+                        arr[i][j] = 0
+                        for x in range(self.columns):
+                            arr[i][j] += (self.A[i][x] * other.A[x][j])
+                return Matrix(arr)
+
+    def isOrthogonal(self):
+        if self.__mul__(self.transpose()).isIdentity():
+            return True
+        else:
+            return False
+
+    def isInvertible(self):
+        if not self.isSquare():
+            return False
 
 
 if __name__ == '__main__':
-    old = Matrix([[1, 0, 0], [0, 2, 0], [0, 0, 1]])
-    new = Matrix([[1, 0, 0], [0, 4, 0], [0, 0, 1]])
-    print()
-    print(old.transpose())
+    old = Matrix([[1, 2, 3], [4, 5, 6]])
+    new = Matrix([[1, 0], [0, 1]])
+    # print(new * old)
+    print(new.isOrthogonal())
