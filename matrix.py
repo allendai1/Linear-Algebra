@@ -1,3 +1,6 @@
+import numpy as np
+import sympy as mp
+
 # arr: [[1,2,3,],[4,5,6],[7,8,9]] =>  [[1,2,3,],
 #                                       [4,5,6],
 #                                       [7,8,9]]
@@ -148,9 +151,44 @@ class Matrix(object):
         if not self.isSquare():
             return False
 
+    def determinant(self):
+        a = np.array(self.A)
+        return np.linalg.det(a)
+
+    def inverse(self):
+        a = np.array(self.A)
+        return Matrix(np.linalg.inv(a))
+
+    def eigenvalue(self):
+        a = np.array(self.A)
+        w, _ = np.linalg.eig(a)
+
+        return Matrix([w])
+
+    def eigenvector(self):
+        a = np.array(self.A)
+        _, v = np.linalg.eig(a)
+        return Matrix(v)
+
+    def rank(self):
+        a = np.array(self.A)
+        return np.linalg.matrix_rank(a)
+
+    # def similar(self, other):
+    #
+    #     a = [i for i in self.eigenvalue().A[0]]
+    #     b = [i for i in other.eigenvalue().A[0]]
+    #
+    #     # print(a)
+    #     if sorted(a)==sorted(b):
+    #         return True
+    #     else:
+    #         return False
+
 
 if __name__ == '__main__':
-    old = Matrix([[1, 2, 3], [4, 5, 6]])
-    new = Matrix([[1, 0], [0, 1]])
+    a = Matrix([[13,-8,-4], [12,7,4],[24,16,7]])
+    new = Matrix([[0,0,1], [0,1,0],[1,0,0]])
+    b = Matrix([[-1,0,0], [0,3,0], [0,0,-1]])
     # print(new * old)
-    print(new.isOrthogonal())
+
